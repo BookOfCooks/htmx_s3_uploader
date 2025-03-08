@@ -13,10 +13,10 @@ import (
 	"time"
 )
 
-func serve(ctx context.Context) error {
+func serve(ctx context.Context, mux http.Handler) error {
 	server := &http.Server{
 		Addr:    app.ENV.HOST + ":" + strconv.Itoa(app.ENV.PORT),
-		Handler: router(),
+		Handler: mux,
 	}
 
 	shutdownPromise := utils.NewPromise(func() error {

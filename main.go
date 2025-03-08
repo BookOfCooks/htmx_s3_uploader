@@ -21,9 +21,12 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("app.Init: %w", err)
 	}
 
+	// Create router from routes.go
+	mux := router()
+
 	// Start server
 	serverPromise := utils.NewPromise(func() error {
-		return utils.WrapError("serve", serve(ctx))
+		return utils.WrapError("serve", serve(ctx, mux))
 	})
 
 	// Wait for server to close
