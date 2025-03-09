@@ -23,6 +23,8 @@ func initDB(ctx context.Context) error {
 		DBName:               ENV.DB_NAME,
 		Net:                  "tcp",
 		AllowNativePasswords: true,
+		ParseTime:            true,
+		MultiStatements:      true,
 	}
 
 	if _sqlx, err := sqlx.ConnectContext(ctx, "mysql", cfg.FormatDSN()); err != nil {
