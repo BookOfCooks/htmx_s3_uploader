@@ -16,6 +16,8 @@ var ENV struct {
 	DB_USER string `env:"DB_USER,required"`
 	DB_PASS string `env:"DB_PASS,required"`
 	DB_NAME string `env:"DB_NAME,required"`
+
+	GOOSE_DRIVER string `env:"GOOSE_DRIVER,required"`
 }
 
 func loadEnv() error {
