@@ -23,8 +23,8 @@ func router() *chi.Mux {
 	return r
 }
 
-func home(w http.ResponseWriter, r *http.Request) (any, error) {
-	return map[string]any{
+func home(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
+	return pox.JSON(http.StatusOK, map[string]any{
 		"hello": "world",
-	}, nil
+	}), nil
 }
