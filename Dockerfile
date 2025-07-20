@@ -16,8 +16,8 @@ RUN apt-get -y install nano
 RUN wget https://go.dev/dl/go1.24.5.linux-amd64.tar.gz
 RUN tar -C /usr/local -xzf go1.24.5.linux-amd64.tar.gz
 RUN rm go1.24.5.linux-amd64.tar.gz
-ENV PATH="/usr/local/go/bin:${PATH}"
-ENV PATH="$HOME/go/bin:${PATH}"
+ENV PATH="$PATH:/usr/local/go/bin"
+ENV PATH="$PATH:/root/go/bin"
 
 RUN go install -v golang.org/x/tools/gopls@latest
 RUN go install -v github.com/air-verse/air@latest

@@ -20,9 +20,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"golang.Go",
-				"a-h.templ",
-				"bradlc.vscode-tailwindcss"
+				"golang.Go"
 			]
 		}
 	}
