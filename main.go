@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	fmt.Println("Starting application...")
 	ctx := context.Background()
 	if err := run(ctx); err != nil {
 		log.Fatalln("run:", err)

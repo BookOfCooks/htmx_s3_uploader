@@ -12,12 +12,9 @@ var ENV struct {
 	HOST string `env:"HOST,required"`
 	PORT int    `env:"PORT,required"`
 
-	DB_HOST string `env:"DB_HOST,required"`
-	DB_USER string `env:"DB_USER,required"`
-	DB_PASS string `env:"DB_PASS,required"`
-	DB_NAME string `env:"DB_NAME,required"`
-
-	GOOSE_DRIVER string `env:"GOOSE_DRIVER,required"`
+	GOOSE_DRIVER        string `env:"GOOSE_DRIVER,required"`
+	GOOSE_DBSTRING      string `env:"GOOSE_DBSTRING,required"`
+	GOOSE_MIGRATION_DIR string `env:"GOOSE_MIGRATION_DIR,required"`
 }
 
 func loadEnv() error {

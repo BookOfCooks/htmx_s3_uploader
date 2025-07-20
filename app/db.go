@@ -5,7 +5,7 @@ import (
 	"embed"
 	"fmt"
 
-	"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/pressly/goose/v3"
 )
@@ -16,18 +16,7 @@ var DB *sqlx.DB
 var embedMigrations embed.FS
 
 func initDB(ctx context.Context) error {
-	cfg := mysql.Config{
-		Addr:                 ENV.DB_HOST,
-		User:                 ENV.DB_USER,
-		Passwd:               ENV.DB_PASS,
-		DBName:               ENV.DB_NAME,
-		Net:                  "tcp",
-		AllowNativePasswords: true,
-		ParseTime:            true,
-		MultiStatements:      true,
-	}
-
-	if _sqlx, err := sqlx.ConnectContext(ctx, "mysql", cfg.FormatDSN()); err != nil {
+	if _sqlx, err := sqlx.ConnectContext(ctx, "mysql", ENV.GOOSE_DBSTRING); err != nil {
 		return fmt.Errorf("sqlx.ConnectContext: %v", err)
 	} else {
 		DB = _sqlx
