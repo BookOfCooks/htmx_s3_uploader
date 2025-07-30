@@ -11,6 +11,7 @@ RUN apt-get -y install make
 RUN apt-get -y install wget
 RUN apt-get -y install curl
 RUN apt-get -y install nano
+RUN apt-get -y install psmisc
 
 # Install Go
 RUN wget https://go.dev/dl/go1.24.5.linux-amd64.tar.gz
@@ -21,6 +22,7 @@ ENV PATH="$PATH:/root/go/bin"
 
 RUN go install -v golang.org/x/tools/gopls@latest
 RUN go install -v github.com/air-verse/air@latest
+RUN go install -v github.com/a-h/templ/cmd/templ@latest
 
 # Install Node & NPM
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
