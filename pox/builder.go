@@ -3,6 +3,8 @@ package pox
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/a-h/templ"
 )
 
 func JSON(statusCode int, payload any) http.Handler {
@@ -11,4 +13,16 @@ func JSON(statusCode int, payload any) http.Handler {
 		w.WriteHeader(statusCode)
 		json.NewEncoder(w).Encode(payload)
 	})
+}
+
+func HTML(statusCode int, payload string) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		w.WriteHeader(statusCode)
+		w.Write([]byte(payload))
+	})
+}
+
+func Templ(statusCode int, payload templ.Component) http.Handler {
+	return templ.Handler(payload, templ.WithStatus(statusCode))
 }
