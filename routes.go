@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"main/pox"
 	"main/templates"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -25,6 +27,9 @@ func router() *chi.Mux {
 				http.FileServer(http.Dir("public")))))
 
 	r.Get("/", pox.Wrap(home))
+	r.Post("/form/step1", pox.Wrap(formStep1))
+	r.Post("/form/step2", pox.Wrap(formStep2))
+	r.Post("/form/step3", pox.Wrap(formStep3))
 
 	return r
 }
@@ -33,9 +38,22 @@ func home(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
 	return pox.Templ(http.StatusOK, templates.Home()), nil
 }
 
-func disableCacheInDevMode(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Cache-Control", "no-store")
-		next.ServeHTTP(w, r)
-	})
+func formStep1(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
+	name := strings.TrimSpace(r.FormValue("name"))
+	if len(name) == 0 {
+		return pox.Templ(http.StatusOK, templates.AlertError("Name cannot be empty")), nil
+	}
+	return pox.Templ(http.StatusOK, templates.Step2()), nil
+}
+
+func formStep2(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
+	_, _, err := r.FormFile("file")
+	if err != nil {
+		return pox.Templ(http.StatusOK, templates.AlertError("Cannot open file, please contact tech support!")), fmt.Errorf("r.FormFile: %w", err)
+	}
+	return pox.Templ(http.StatusOK, templates.Step3()), nil
+}
+
+func formStep3(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
+	return pox.Templ(http.StatusOK, templates.Step4()), nil
 }
