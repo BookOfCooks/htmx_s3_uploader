@@ -14,7 +14,7 @@ templ Home() {
 		</head>
 		<body>
 			@header()
-			@Stepper(1)
+			@Stepper(1, Step1())
 		</body>
 	</html>
 }
@@ -65,7 +65,7 @@ var steps = []step{
 	{name: "Review", number: 4},
 }
 
-templ Stepper(currentStep int) {
+templ Stepper(currentStep int, child templ.Component) {
 	<div class="container flex mx-auto px-4" id="stepper">
 		<ul class="steps steps-vertical">
 			for _, step := range steps {
@@ -75,14 +75,14 @@ templ Stepper(currentStep int) {
 			}
 		</ul>
 		<div class="flex-1 p-4">
-			@Step1()
+			@child
 		</div>
 	</div>
 }
 
 // Modifies exported variable `instrument.name`
 templ Step1() {
-	<form hx-post="/form/step1" hx-target="this" hx-swap="outerHTML">
+	<form hx-post="/form/step1" hx-target="#stepper" hx-swap="outerHTML">
 		<fieldset class="fieldset mb-2">
 			<legend class="fieldset-legend">Name of the instrument?</legend>
 			<input type="text" name="name" class="input" placeholder="Ex: Piano" required/>
@@ -94,7 +94,7 @@ templ Step1() {
 templ Step2() {
 	<form
 		hx-post="/form/step2"
-		hx-target="this"
+		hx-target="#stepper"
 		hx-swap="outerHTML"
 		x-data
 		x-ref="form"
@@ -112,7 +112,7 @@ templ Step2() {
 }
 
 templ Step3() {
-	<form hx-post="/form/step3" hx-target="this" hx-swap="outerHTML">
+	<form hx-post="/form/step3" hx-target="#stepper" hx-swap="outerHTML">
 		<p class="mb-2">How would you like to timestamp this music?</p>
 		<fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4 mb-4">
 			<legend class="fieldset-legend">Select source of timestamps</legend>

@@ -43,7 +43,7 @@ func formStep1(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
 	if len(name) == 0 {
 		return pox.Templ(http.StatusOK, templates.AlertError("Name cannot be empty")), nil
 	}
-	return pox.Templ(http.StatusOK, templates.Step2()), nil
+	return pox.Templ(http.StatusOK, templates.Stepper(2, templates.Step2())), nil
 }
 
 func formStep2(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
@@ -51,9 +51,9 @@ func formStep2(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
 	if err != nil {
 		return pox.Templ(http.StatusOK, templates.AlertError("Cannot open file, please contact tech support!")), fmt.Errorf("r.FormFile: %w", err)
 	}
-	return pox.Templ(http.StatusOK, templates.Step3()), nil
+	return pox.Templ(http.StatusOK, templates.Stepper(3, templates.Step3())), nil
 }
 
 func formStep3(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
-	return pox.Templ(http.StatusOK, templates.Step4()), nil
+	return pox.Templ(http.StatusOK, templates.Stepper(4, templates.Step4())), nil
 }
