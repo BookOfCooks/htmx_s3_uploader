@@ -1,3 +1,14 @@
 @import "tailwindcss" source(none);
+
 @source "../templates/*.{html,templ,go,js}";
+
 @plugin "daisyui";
+
+.my-indicator:not(.htmx-request .my-indicator, .htmx-request.my-indicator) {
+  display: none;
+}
+
+.htmx-request.my-anti-indicator,
+.htmx-request .my-anti-indicator {
+  display: none;
+}

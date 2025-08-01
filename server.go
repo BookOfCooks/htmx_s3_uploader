@@ -51,3 +51,10 @@ func waitThenCloseServer(ctx context.Context, server *http.Server) error {
 	}
 	return nil
 }
+
+func disableCacheInDevMode(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		next.ServeHTTP(w, r)
+	})
+}
