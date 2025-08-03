@@ -5,13 +5,11 @@ import (
 	"io"
 	"main/app"
 	"os"
-
-	"github.com/google/uuid"
 )
 
-func FakeS3Upload(filename string, ext string, contents io.Reader) (string, error) {
-	path := fmt.Sprintf("public/audios/%s-%s.%s", filename, uuid.NewString(), ext)
-	f, err := os.Create(path)
+func FakeS3Upload(filename string, contents io.Reader) (string, error) {
+	path := "public/audios/" + filename
+	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		return "", fmt.Errorf("os.Create: %w", err)
 	}

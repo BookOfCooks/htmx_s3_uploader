@@ -533,6 +533,10 @@
       isolation: isolate;
     }
   }
+  .tab-disabled {
+    pointer-events: none;
+    opacity: 40%;
+  }
   .input {
     cursor: text;
     border: var(--border) solid #0000;
@@ -1095,6 +1099,9 @@
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
   }
+  .ml-8 {
+    margin-left: calc(var(--spacing) * 8);
+  }
   .badge {
     display: inline-flex;
     align-items: center;
@@ -1343,6 +1350,11 @@
     --fontsize: 1.125rem;
     --btn-p: 1.25rem;
     --size: calc(var(--size-field, 0.25rem) * 12);
+  }
+  .btn-sm {
+    --fontsize: 0.75rem;
+    --btn-p: 0.75rem;
+    --size: calc(var(--size-field, 0.25rem) * 8);
   }
   .btn-neutral {
     --btn-color: var(--color-neutral);

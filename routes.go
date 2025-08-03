@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/uuid"
+	"github.com/sanity-io/litter"
 )
 
 func router() *chi.Mux {
@@ -71,17 +72,40 @@ func formStep1(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
 	// WARNING! ENSURE `sessionId` EXISTS IN `sessions`, OTHERWISE YOUR SERVER WILL PANIC AND CRASH!!!
 	sessions[sessionId].Name = name
 
-	return pox.Templ(http.StatusOK, templates.Stepper(2, templates.Step2(sessionId))), nil
+	// Passing `name` over here
+	return pox.Templ(http.StatusOK, templates.Stepper(2, templates.Step2(sessionId, name))), nil
 }
 
 func formStep2(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
-	_, _, err := r.FormFile("file")
+	file, headers, err := r.FormFile("file")
 	if err != nil {
 		return pox.Templ(http.StatusOK, templates.AlertError("Cannot open file, please contact tech support!")), fmt.Errorf("r.FormFile: %w", err)
 	}
-	return pox.Templ(http.StatusOK, templates.Stepper(3, templates.Step3())), nil
+
+	// In real code, avoid using `headers.Filename` (or at least with safety precautions)
+	uploadUrl, err := FakeS3Upload(headers.Filename, file)
+	if err != nil {
+		return pox.Templ(http.StatusOK, templates.AlertError("Cannot upload file, try again")), fmt.Errorf("FakeS3Upload: %w", err)
+	}
+
+	sessionId := r.FormValue("sessionId")
+	sessions[sessionId].Soundtrack = uploadUrl
+
+	// Let's log the data we have so far
+	litter.Dump(sessions[sessionId])
+
+	// Don't forget to pass `sessionId` to next step
+	return pox.Templ(http.StatusOK, templates.Stepper(3, templates.Step3(sessionId))), nil
 }
 
 func formStep3(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
-	return pox.Templ(http.StatusOK, templates.Stepper(4, templates.Step4())), nil
+	sessionId := r.FormValue("sessionId")
+	session := sessions[sessionId]
+	session.Markers = []Marker{}
+
+	return pox.Templ(http.StatusOK, templates.Stepper(4,
+		// This time we pass extra information, as this is the review step
+		// Markers are TODO
+		templates.Step4(sessionId, session.Name, session.Soundtrack),
+	)), nil
 }
