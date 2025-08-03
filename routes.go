@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/google/uuid"
 )
 
 func router() *chi.Mux {
@@ -37,8 +38,26 @@ func router() *chi.Mux {
 	return r
 }
 
+type FormSession struct {
+	Id         string
+	Name       string
+	Soundtrack string
+	Markers    []Marker
+}
+
+type Marker struct {
+	Name  string
+	Start time.Duration
+}
+
+var sessions = map[string]*FormSession{}
+
 func home(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
-	return pox.Templ(http.StatusOK, templates.Home()), nil
+	// In production-grade systems, you'll might save this into a Database
+	sessionId := uuid.NewString()
+	// In real code, don't write to `sessions` without mutex
+	sessions[sessionId] = &FormSession{Id: sessionId}
+	return pox.Templ(http.StatusOK, templates.Home(sessionId)), nil
 }
 
 func formStep1(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
@@ -46,7 +65,13 @@ func formStep1(w http.ResponseWriter, r *http.Request) (http.Handler, error) {
 	if len(name) == 0 {
 		return pox.Templ(http.StatusOK, templates.AlertError("Name cannot be empty")), nil
 	}
-	return pox.Templ(http.StatusOK, templates.Stepper(2, templates.Step2())), nil
+
+	sessionId := r.FormValue("sessionId")
+	// In real code, protect with a mutex!
+	// WARNING! ENSURE `sessionId` EXISTS IN `sessions`, OTHERWISE YOUR SERVER WILL PANIC AND CRASH!!!
+	sessions[sessionId].Name = name
+
+	return pox.Templ(http.StatusOK, templates.Stepper(2, templates.Step2(sessionId))), nil
 }
 
 func formStep2(w http.ResponseWriter, r *http.Request) (http.Handler, error) {

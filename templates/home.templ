@@ -1,6 +1,6 @@
 package templates
 
-templ Home() {
+templ Home(sessionId string) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -14,7 +14,7 @@ templ Home() {
 		</head>
 		<body>
 			@header()
-			@Stepper(1, Step1())
+			@Stepper(1, Step1(sessionId))
 		</body>
 	</html>
 }
@@ -81,8 +81,9 @@ templ Stepper(currentStep int, child templ.Component) {
 }
 
 // Modifies exported variable `instrument.name`
-templ Step1() {
+templ Step1(sessionId string) {
 	<form hx-post="/form/step1" hx-target="#stepper" hx-swap="outerHTML">
+		<input type="hidden" name="sessionId" value={ sessionId }/>
 		<fieldset class="fieldset mb-2">
 			<legend class="fieldset-legend">Name of the instrument?</legend>
 			<input type="text" name="name" class="input" placeholder="Ex: Piano" required/>
@@ -91,7 +92,7 @@ templ Step1() {
 	</form>
 }
 
-templ Step2() {
+templ Step2(sessionId string) {
 	<form
 		hx-post="/form/step2"
 		hx-target="#stepper"

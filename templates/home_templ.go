@@ -8,7 +8,7 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Home() templ.Component {
+func Home(sessionId string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -37,7 +37,7 @@ func Home() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Stepper(1, Step1()).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Stepper(1, Step1(sessionId)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -169,7 +169,7 @@ func Stepper(currentStep int, child templ.Component) templ.Component {
 }
 
 // Modifies exported variable `instrument.name`
-func Step1() templ.Component {
+func Step1(sessionId string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -190,7 +190,20 @@ func Step1() templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<form hx-post=\"/form/step1\" hx-target=\"#stepper\" hx-swap=\"outerHTML\"><fieldset class=\"fieldset mb-2\"><legend class=\"fieldset-legend\">Name of the instrument?</legend> <input type=\"text\" name=\"name\" class=\"input\" placeholder=\"Ex: Piano\" required></fieldset><button class=\"btn btn-neutral\">Submit</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<form hx-post=\"/form/step1\" hx-target=\"#stepper\" hx-swap=\"outerHTML\"><input type=\"hidden\" name=\"sessionId\" value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(sessionId)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/home.templ`, Line: 86, Col: 57}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\"><fieldset class=\"fieldset mb-2\"><legend class=\"fieldset-legend\">Name of the instrument?</legend> <input type=\"text\" name=\"name\" class=\"input\" placeholder=\"Ex: Piano\" required></fieldset><button class=\"btn btn-neutral\">Submit</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -198,7 +211,7 @@ func Step1() templ.Component {
 	})
 }
 
-func Step2() templ.Component {
+func Step2(sessionId string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -214,12 +227,12 @@ func Step2() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var9 == nil {
+			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<form hx-post=\"/form/step2\" hx-target=\"#stepper\" hx-swap=\"outerHTML\" x-data x-ref=\"form\" hx-encoding=\"multipart/form-data\"><p class=\"mb-2\">Upload an audio file (ex: mp3, wav, opus, etc)</p><input type=\"file\" x-ref=\"file_input\" name=\"file\" accept=\"audio/*\" hidden @input=\"$refs.form.requestSubmit()\"> <button @click=\"$refs.file_input.value = null; $refs.file_input.click()\" class=\"btn btn-lg btn-neutral mb-2\" type=\"button\"><i class=\"my-indicator fa-solid fa-spinner animate-spin\"></i> <i class=\"my-anti-indicator fa-solid fa-upload\"></i> Upload</button><div class=\"result space-y-2\"></div></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<form hx-post=\"/form/step2\" hx-target=\"#stepper\" hx-swap=\"outerHTML\" x-data x-ref=\"form\" hx-encoding=\"multipart/form-data\"><p class=\"mb-2\">Upload an audio file (ex: mp3, wav, opus, etc)</p><input type=\"file\" x-ref=\"file_input\" name=\"file\" accept=\"audio/*\" hidden @input=\"$refs.form.requestSubmit()\"> <button @click=\"$refs.file_input.value = null; $refs.file_input.click()\" class=\"btn btn-lg btn-neutral mb-2\" type=\"button\"><i class=\"my-indicator fa-solid fa-spinner animate-spin\"></i> <i class=\"my-anti-indicator fa-solid fa-upload\"></i> Upload</button><div class=\"result space-y-2\"></div></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -243,12 +256,12 @@ func Step3() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var9 == nil {
-			templ_7745c5c3_Var9 = templ.NopComponent
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<form hx-post=\"/form/step3\" hx-target=\"#stepper\" hx-swap=\"outerHTML\"><p class=\"mb-2\">How would you like to timestamp this music?</p><fieldset class=\"fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4 mb-4\"><legend class=\"fieldset-legend\">Select source of timestamps</legend> <label class=\"label\"><input type=\"radio\" name=\"marker_source\" value=\"none\" checked=\"checked\" class=\"radio\"> None (no markers)</label> <label class=\"label\"><input type=\"radio\" name=\"marker_source\" value=\"csv\" class=\"radio\"> Audition Exported Markers</label> <label class=\"label\"><input type=\"radio\" name=\"marker_source\" value=\"wav\" class=\"radio\"> Extract from File <b>(only .wav supported)</b></label></fieldset><button class=\"btn btn-neutral\">Submit</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<form hx-post=\"/form/step3\" hx-target=\"#stepper\" hx-swap=\"outerHTML\"><p class=\"mb-2\">How would you like to timestamp this music?</p><fieldset class=\"fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4 mb-4\"><legend class=\"fieldset-legend\">Select source of timestamps</legend> <label class=\"label\"><input type=\"radio\" name=\"marker_source\" value=\"none\" checked=\"checked\" class=\"radio\"> None (no markers)</label> <label class=\"label\"><input type=\"radio\" name=\"marker_source\" value=\"csv\" class=\"radio\"> Audition Exported Markers</label> <label class=\"label\"><input type=\"radio\" name=\"marker_source\" value=\"wav\" class=\"radio\"> Extract from File <b>(only .wav supported)</b></label></fieldset><button class=\"btn btn-neutral\">Submit</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -272,12 +285,12 @@ func Step4() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var10 == nil {
-			templ_7745c5c3_Var10 = templ.NopComponent
+		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var11 == nil {
+			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<form><p class=\"mb-4\">Review all information</p><hr class=\"mb-4\"><p class=\"mb-4\">Name: <b>Yet to be!</b></p><p class=\"mb-4 flex gap-2 items-center\">Audio: <audio src=\"\" controls></audio></p><table class=\"table table-zebra mb-4\"><tr><th class=\"w-30\">Markers</th><th>Name</th><th>Start</th></tr><tr><th>1</th><td>Verse 1</td><td>0:03</td></tr><tr><th>2</th><td>Verse 2</td><td>1:23</td></tr><tr><th>3</th><td>Verse 3</td><td>4:25</td></tr></table><button class=\"btn btn-neutral\">Submit</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<form><p class=\"mb-4\">Review all information</p><hr class=\"mb-4\"><p class=\"mb-4\">Name: <b>Yet to be!</b></p><p class=\"mb-4 flex gap-2 items-center\">Audio: <audio src=\"\" controls></audio></p><table class=\"table table-zebra mb-4\"><tr><th class=\"w-30\">Markers</th><th>Name</th><th>Start</th></tr><tr><th>1</th><td>Verse 1</td><td>0:03</td></tr><tr><th>2</th><td>Verse 2</td><td>1:23</td></tr><tr><th>3</th><td>Verse 3</td><td>4:25</td></tr></table><button class=\"btn btn-neutral\">Submit</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
