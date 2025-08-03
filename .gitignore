@@ -18,6 +18,7 @@
 # vendor/
 tmp
 node_modules
+public/audios
 
 # Go workspace file
 go.work

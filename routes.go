@@ -5,6 +5,7 @@ import (
 	"main/pox"
 	"main/templates"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -20,6 +21,8 @@ func router() *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+
+	os.Mkdir("public/audios", 0o700)
 
 	r.Mount("/public/",
 		disableCacheInDevMode(
